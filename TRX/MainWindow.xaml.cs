@@ -148,14 +148,14 @@ namespace TRX
                 Assets = new Assets
                 {
                     LargeImageKey = "trx",
-                    LargeImageText = "Soon™"
+                    LargeImageText = "What are you waiting for? Download now!"
                 },
                 Buttons = new global::DiscordRPC.Button[]
                 {
                     new global::DiscordRPC.Button
                     {
                         Label = "Download TRX",
-                        Url = "https://www.youtube.com/watch?v=xvFZjo5PgG0"
+                        Url = "https://github.com/StingerFingersinmyass/TRXUI"
                     }
                 }
             });
