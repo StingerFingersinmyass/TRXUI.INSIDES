@@ -1,0 +1,92 @@
+<fw:AcrylicWindow
+	x:Class="TRX.msgBox"
+	xmlns:fw="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:local="clr-namespace:TRX"
+	fw:PointerTracker.Enabled="True"
+	AcrylicWindowStyle="None"
+	Enabled="True"
+	ShowInTaskbar="True"
+	ResizeMode="NoResize"
+	WindowStyle="None"
+	Topmost="True"
+	WindowStartupLocation="CenterScreen"
+	NoiseOpacity="0"
+	Title="TRX"
+	Height="192"
+	Width="483"
+	Background="#4C1D1D1D"
+	MouseDown="AcrylicWindow_MouseDown">
+	<Grid>
+		<Image
+			x:Name="logoImg"
+			HorizontalAlignment="Left"
+			Height="68"
+			VerticalAlignment="Top"
+			Width="68"
+			Source="TRXLogos\TRX68.png"
+			Margin="6,-1,0,0" />
+		<Label
+			x:Name="linkLbl"
+			HorizontalAlignment="Left"
+			Margin="10,0,0,5"
+			VerticalAlignment="Bottom"
+			Foreground="#FFDCD3D3"
+			FontFamily="Segoe UI Semilight"
+			FontSize="16"
+			HorizontalContentAlignment="Center"
+			VerticalContentAlignment="Center"
+			Background="{x:Null}">
+			<Hyperlink
+				NavigateUri="https://trx-roblox.com"
+				Foreground="#FF1B86F1"
+				Click="Hyperlink_Click">trx-roblox.com</Hyperlink>
+		</Label>
+		<Button
+			x:Name="exitBtn"
+			Style="{StaticResource ButtonRevealStyle}"
+			Content="X"
+			HorizontalAlignment="Right"
+			Margin="447,0,0,0"
+			VerticalAlignment="Top"
+			Width="35"
+			Height="35"
+			FontSize="16"
+			Foreground="#FFFFFFFF"
+			Background="{x:Null}"
+			BorderBrush="{x:Null}"
+			Click="exitBtn_Click" />
+		<Label
+			x:Name="titleLbl"
+			Content="Lorem ipsum"
+			HorizontalAlignment="Left"
+			Margin="80,12,0,0"
+			VerticalAlignment="Top"
+			FontSize="16"
+			Foreground="#FFFFFFFF"
+			FontFamily="Segoe UI Semibold" />
+		<Label
+			x:Name="textLbl"
+			Content="Lorem ipsum dolor sit amet, consectetur adipiscing elit.&#xD;&#xA;Integer lorem nibh, rhoncus ut sodales imperdiet, laoreet&#xD;&#xA;eu odio."
+			HorizontalAlignment="Left"
+			Margin="10,67,0,0"
+			VerticalAlignment="Top"
+			FontSize="16"
+			Foreground="#FFFFFFFF" />
+		<Button
+			x:Name="okBtn"
+			Style="{StaticResource ButtonRevealStyle}"
+			Content="OK"
+			HorizontalAlignment="Right"
+			Margin="0,0,11,10"
+			VerticalAlignment="Bottom"
+			Width="101"
+			Height="26"
+			Background="#80343434"
+			Foreground="#FFFFFFFF"
+			Click="okBtn_Click" />
+	</Grid>
+</fw:AcrylicWindow>
