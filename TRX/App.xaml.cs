@@ -1,5 +1,7 @@
 using SeliwareAPI;
+using System.Net.Http;
 using System;
+using System.Threading.Tasks;
 using System.CodeDom.Compiler;
 using System.Diagnostics;
 using System.IO;
@@ -15,6 +17,49 @@ namespace TRX
         {         
             AppDomain.CurrentDomain.UnhandledException += Exception;
             this.DispatcherUnhandledException += App_DispatcherUnhandledException;
+            CheckForUpdatesAsync();
+        }
+
+        private async void CheckForUpdatesAsync()
+        {
+            try
+            {
+                string binPath = ".\\Bin";
+                string verPath = Path.Combine(binPath, "ver.bin");
+                string currentVer = File.Exists(verPath) ? File.ReadAllText(verPath) : "0";
+
+                using (var httpClient = new HttpClient(new HttpClientHandler { UseProxy = false, AllowAutoRedirect = true }))
+                {
+                    httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("request");
+                    string releaseInfo = await httpClient.GetStringAsync("https://api.github.com/repos/StingerFingersinmyass/TRXUI.INSIDES/releases/latest");
+                    
+                    string latestVer = ParseJsonValue(releaseInfo, "tag_name");
+
+                    if (latestVer != null && latestVer != currentVer)
+                    {
+                        functions.Msg("Custom UI outdated. Update It with TRXLoader.", "Version Control");
+                        Shutdown();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log or handle the exception, but don't crash the app if the check fails
+                Debug.WriteLine($"Update check failed: {ex.Message}");
+            }
+        }
+
+        private string ParseJsonValue(string json, string key)
+        {
+            string searchKey = $"\"" + key + "\": \"";
+            int keyIndex = json.IndexOf(searchKey);
+            if (keyIndex == -1) return null;
+
+            int valueStartIndex = keyIndex + searchKey.Length;
+            int valueEndIndex = json.IndexOf('"', valueStartIndex);
+            if (valueEndIndex == -1) return null;
+
+            return json.Substring(valueStartIndex, valueEndIndex - valueStartIndex);
         }
 
         private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)

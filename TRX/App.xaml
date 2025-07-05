@@ -4,7 +4,7 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:fw="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
 	xmlns:local="clr-namespace:TRX"
-	StartupUri="MainWindow.xaml">
+	StartupUri="KeySystem.xaml">
 	<Application.Resources>
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>

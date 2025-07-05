@@ -1,8 +1,9 @@
-п»їusing System;
+using System;
 using System.CodeDom.Compiler;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Net;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -14,18 +15,13 @@ using TRX.Properties;
 
 namespace TRX
 {
-	// Token: 0x02000009 RID: 9
 	public partial class KeySystem : AcrylicWindow
 	{
-		// Token: 0x17000003 RID: 3
-		// (get) Token: 0x0600002D RID: 45 RVA: 0x000021E1 File Offset: 0x000003E1
-		// (set) Token: 0x0600002E RID: 46 RVA: 0x000021E9 File Offset: 0x000003E9
 		private IEasingFunction Smooth { get; set; } = new QuarticEase
 		{
 			EasingMode = EasingMode.EaseInOut
 		};
 
-		// Token: 0x0600002F RID: 47 RVA: 0x00003944 File Offset: 0x00001B44
 		public void ObjectShift(DependencyObject Object, Thickness Get, Thickness Set)
 		{
 			Storyboard storyboard = new Storyboard();
@@ -42,7 +38,6 @@ namespace TRX
 			storyboard.Begin();
 		}
 
-		// Token: 0x06000030 RID: 48 RVA: 0x000039C4 File Offset: 0x00001BC4
 		public void Fade(DependencyObject Object)
 		{
 			Storyboard storyboard = new Storyboard();
@@ -58,7 +53,6 @@ namespace TRX
 			storyboard.Begin();
 		}
 
-		// Token: 0x06000031 RID: 49 RVA: 0x00003A58 File Offset: 0x00001C58
 		private async void StartAnimations()
 		{
 			await Task.Delay(1000);
@@ -74,27 +68,31 @@ namespace TRX
 			this.Fade(this.getkeyBtn);
 		}
 
-		// Token: 0x06000032 RID: 50 RVA: 0x00003A90 File Offset: 0x00001C90
 		public KeySystem()
 		{
-			if (!this.CheckKey(Settings.Default.key))
+			string keyFile = "key.dat";
+			try
 			{
-				ResourceDictionaryEx.GlobalTheme = new ElementTheme?(ElementTheme.Dark);
-				this.InitializeComponent();
-				this.keyLbl.Opacity = 0.0;
-				this.keyPb.Opacity = 0.0;
-				this.okBtn.Opacity = 0.0;
-				this.getkeyBtn.Opacity = 0.0;
-				this.exitBtn.Opacity = 0.0;
-				this.minBtn.Opacity = 0.0;
-				this.StartAnimations();
-				return;
+				if (File.Exists(keyFile) && !string.IsNullOrEmpty(File.ReadAllText(keyFile)))
+				{
+					new MainWindow().Show();
+					base.Hide();
+					return;
+				}
 			}
-			new MainWindow().Show();
-			base.Hide();
+			catch { /* игнорируя ошибки просто показать меню ключа */ }
+
+			ResourceDictionaryEx.GlobalTheme = new ElementTheme?(ElementTheme.Dark);
+			this.InitializeComponent();
+			this.keyLbl.Opacity = 0.0;
+			this.keyPb.Opacity = 0.0;
+			this.okBtn.Opacity = 0.0;
+			this.getkeyBtn.Opacity = 0.0;
+			this.exitBtn.Opacity = 0.0;
+			this.minBtn.Opacity = 0.0;
+			this.StartAnimations();
 		}
 
-		// Token: 0x06000033 RID: 51 RVA: 0x00002076 File Offset: 0x00000276
 		private void AcrylicWindow_MouseDown(object sender, MouseButtonEventArgs e)
 		{
 			if (e.ChangedButton == MouseButton.Left)
@@ -103,58 +101,47 @@ namespace TRX
 			}
 		}
 
-		// Token: 0x06000034 RID: 52 RVA: 0x000021F2 File Offset: 0x000003F2
 		private void exitBtn_Click(object sender, RoutedEventArgs e)
 		{
 			Environment.Exit(0);
 		}
 
-		// Token: 0x06000035 RID: 53 RVA: 0x000021FA File Offset: 0x000003FA
 		private void minBtn_Click(object sender, RoutedEventArgs e)
 		{
 			base.WindowState = WindowState.Minimized;
 		}
 
-		// Token: 0x06000036 RID: 54 RVA: 0x00003B6C File Offset: 0x00001D6C
 		private void getkeyBtn_Click(object sender, RoutedEventArgs e)
 		{
-			string text = "https://trx-roblox.com/api/key/checkpoint";
-			try
-			{
-				Process.Start(text);
-			}
-			catch (Exception)
-			{
-				Clipboard.SetText(text);
-				functions.Msg("An unknown error occurred,\nso we copied your key-link to the clipboard.", "GetKey error!");
-			}
+			functions.Msg("This feature is disabled.", "Get Key");
 		}
 
-		// Token: 0x06000037 RID: 55 RVA: 0x00002086 File Offset: 0x00000286
 		private void AntiFiddler()
 		{
 			WebRequest.DefaultWebProxy = new WebProxy();
 		}
 
-		// Token: 0x06000038 RID: 56 RVA: 0x00003BB0 File Offset: 0x00001DB0
 		public bool CheckKey(string key)
 		{
-			this.AntiFiddler();
-			WebClient webClient = new WebClient();
-			string text = "https://trx-roblox.com/api/key/test?key=";
-			return webClient.DownloadString(text + key) == "valid";
+			return !string.IsNullOrEmpty(key);
 		}
 
-		// Token: 0x06000039 RID: 57 RVA: 0x00003BEC File Offset: 0x00001DEC
 		private void okBtn_Click(object sender, RoutedEventArgs e)
 		{
 			if (this.CheckKey(this.keyPb.Password))
 			{
-				Settings.Default.key = this.keyPb.Password;
-				Settings.Default.Save();
-				new MainWindow().Show();
-				base.Hide();
-				return;
+				try
+				{
+					File.WriteAllText("key.dat", this.keyPb.Password);
+					new MainWindow().Show();
+					base.Hide();
+					return;
+				}
+				catch (Exception ex)
+				{
+					functions.Msg($"Failed to save key: {ex.Message}", "Error");
+					return;
+				}
 			}
 			functions.Msg("Invalid key!", "Key System");
 		}
